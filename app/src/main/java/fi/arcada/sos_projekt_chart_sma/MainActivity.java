@@ -2,6 +2,7 @@ package fi.arcada.sos_projekt_chart_sma;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +19,14 @@ public class MainActivity extends AppCompatActivity {
 
     String currency, datefrom, dateto;
     LineChart chart;
+    ArrayList<ChartLine> lines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         chart = (LineChart) findViewById(R.id.chart);
+        lines = new ArrayList<>();
 
         // TEMPORÄRA VÄRDEN
         currency = "USD";
@@ -34,22 +38,45 @@ public class MainActivity extends AppCompatActivity {
         // Skriv ut dem i konsolen
         System.out.println(currencyValues.toString());
 
-        createGraph(currencyValues);
+        lines.add(new ChartLine(currencyValues, "Values", Color.BLUE, 0));
+        lines.add(new ChartLine(Statistics.movingAverage(currencyValues, 3), "SMA3", Color.GREEN, 3));
+
+        createGraph(lines);
     }
 
-    public void createGraph(ArrayList<Double> dataSet) {
-        List<Entry> entries = new ArrayList<Entry>();
+    public void createGraph(ArrayList<ChartLine> chartLines) {
+        // Dataseries med linjerna
+        List<ILineDataSet> dataSeries = new ArrayList<>();
 
-        for (int i = 0; i < dataSet.size(); i++) {
-            entries.add(new Entry(i, dataSet.get(i).floatValue()));
+        for (ChartLine chartLine: chartLines) {
+            LineDataSet lineDataSet = new LineDataSet(chartLine.getEntries(), chartLine.getLabel());
+
+            lineDataSet.setColor(chartLine.getColor());
+            lineDataSet.setDrawCircles(false);
+            lineDataSet.setDrawValues(false);
+            dataSeries.add(lineDataSet);
         }
 
-        LineDataSet lineDataSet = new LineDataSet(entries, "Värden");
+        LineData lineData = new LineData(dataSeries);
+        chart.setData(lineData);
+        chart.invalidate();
+    }
+
+
+/*    // Enkel graf
+    public void createGraph(ArrayList<Double> dataSet) {
+        List<Entry> entries1 = new ArrayList<Entry>();
+
+        for (int i = 0; i < dataSet.size(); i++) {
+            entries1.add(new Entry(i, dataSet.get(i).floatValue()));
+        }
+
+        LineDataSet lineDataSet = new LineDataSet(entries1, "Värden");
         LineData lineData = new LineData(lineDataSet);
 
         chart.setData(lineData);
         chart.invalidate();
-    }
+    }*/
 
 
     // Färdig metod som hämtar växelkursdata
