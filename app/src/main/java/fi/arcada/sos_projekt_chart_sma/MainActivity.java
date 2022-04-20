@@ -2,28 +2,27 @@ package fi.arcada.sos_projekt_chart_sma;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     String currency, datefrom, dateto;
+    LineChart chart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        chart = (LineChart) findViewById(R.id.chart);
 
         // TEMPORÄRA VÄRDEN
         currency = "USD";
@@ -34,6 +33,22 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Double> currencyValues = getCurrencyValues(currency, datefrom, dateto);
         // Skriv ut dem i konsolen
         System.out.println(currencyValues.toString());
+
+        createGraph(currencyValues);
+    }
+
+    public void createGraph(ArrayList<Double> dataSet) {
+        List<Entry> entries = new ArrayList<Entry>();
+
+        for (int i = 0; i < dataSet.size(); i++) {
+            entries.add(new Entry(i, dataSet.get(i).floatValue()));
+        }
+
+        LineDataSet lineDataSet = new LineDataSet(entries, "Värden");
+        LineData lineData = new LineData(lineDataSet);
+
+        chart.setData(lineData);
+        chart.invalidate();
     }
 
 
