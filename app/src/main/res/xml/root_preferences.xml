@@ -5,7 +5,7 @@
 
 
         <EditTextPreference
-            android:defaultValue="false"
+            android:defaultValue="2022-01-01"
             android:key="startdate"
             android:selectAllOnFocus="true"
             android:singleLine="true"
@@ -14,7 +14,7 @@
         <EditTextPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:defaultValue="Default value"
+            android:defaultValue="2022-02-01"
             android:key="enddate"
             android:selectAllOnFocus="true"
             android:singleLine="true"
@@ -37,14 +37,17 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:visibility="visible"
-            app:title="SMA1"
+            app:defaultValue="3"
+            app:title="Linje 1"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            android:defaultValue="true"
+            android:layout_height="wrap_content"
             android:key="sma2"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            app:title="SMA2"
+            android:visibility="visible"
+            app:defaultValue="7"
+            app:title="Linje 2"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

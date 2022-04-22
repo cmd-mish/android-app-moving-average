@@ -3,10 +3,13 @@ package fi.arcada.sos_projekt_chart_sma;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -24,32 +27,40 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ChartLine> lines;
     ArrayList<Double> currencyValues;
     CheckBox checkBoxSMA1, checkBoxSMA2;
-    int sma1, sma2;
+    String sma1, sma2;
+    TextView textViewInfo;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         checkBoxSMA1 = findViewById(R.id.checkBoxSMA1);
         checkBoxSMA2 = findViewById(R.id.checkBoxSMA2);
-        sma1 = 3;
-        sma2 = 10;
+        textViewInfo = findViewById(R.id.textViewInfo);
+
+        sma1 = sharedPref.getString("sma1", "3");
+        sma2 = sharedPref.getString("sma2", "7");
+        checkBoxSMA1.setText("SMA " + sma1);
+        checkBoxSMA2.setText("SMA " + sma2);
 
         chart = (LineChart) findViewById(R.id.chart);
         lines = new ArrayList<>();
 
         // TEMPORÄRA VÄRDEN
-        currency = "USD";
-        datefrom = "2022-01-01";
-        dateto = "2022-02-01";
+        currency = sharedPref.getString("currency", "USD");
+        datefrom = sharedPref.getString("startdate", "2022-01-01");
+        dateto = sharedPref.getString("enddate", "2022-02-01");
+        textViewInfo.setText(String.format("%s | %s — %s", currency, datefrom, dateto));
 
         // Hämta växelkurser från API
         currencyValues = getCurrencyValues(currency, datefrom, dateto);
         // Skriv ut dem i konsolen
         System.out.println(currencyValues.toString());
 
-        lines.add(new ChartLine(currencyValues, "Values", Color.BLUE, 0));
+        lines.add(new ChartLine(currencyValues, currency, Color.BLUE, 0));
         // lines.add(new ChartLine(Statistics.movingAverage(currencyValues, 3), "SMA3", Color.GREEN, 3));
 
         createGraph(lines);
@@ -92,8 +103,11 @@ public class MainActivity extends AppCompatActivity {
         String label = ((CheckBox) view).getText().toString();
 
         if (checked) {
-            addLine(Statistics.movingAverage(currencyValues, sma1), label, Color.GREEN, sma1);
-            // Toast.makeText(this, label, Toast.LENGTH_SHORT).show();
+            try {
+                addLine(Statistics.movingAverage(currencyValues, Integer.parseInt(sma1)), label, Color.GREEN, Integer.parseInt(sma1));
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         } else {
             removeLine(label);
         }
@@ -104,8 +118,11 @@ public class MainActivity extends AppCompatActivity {
         String label = ((CheckBox) view).getText().toString();
 
         if (checked) {
-            addLine(Statistics.movingAverage(currencyValues, sma2), label, Color.RED, sma2);
-            // Toast.makeText(this, label, Toast.LENGTH_SHORT).show();
+            try {
+                addLine(Statistics.movingAverage(currencyValues, Integer.parseInt(sma2)), label, Color.RED, Integer.parseInt(sma2));
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         } else {
             removeLine(label);
         }
