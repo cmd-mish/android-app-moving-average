@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    String currency, datefrom, dateto;
     LineChart chart;
     ArrayList<ChartLine> lines;
     ArrayList<Double> currencyValues;
+
     CheckBox checkBoxSMA1, checkBoxSMA2;
-    String sma1, sma2;
+    String currency, datefrom, dateto, sma1, sma2;
     TextView textViewInfo;
+
     SharedPreferences sharedPref;
 
     @Override
@@ -46,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
         checkBoxSMA1.setText("SMA " + sma1);
         checkBoxSMA2.setText("SMA " + sma2);
 
-        chart = (LineChart) findViewById(R.id.chart);
+        chart = findViewById(R.id.chart);
         lines = new ArrayList<>();
 
         // TEMPORÄRA VÄRDEN
         currency = sharedPref.getString("currency", "USD");
         datefrom = sharedPref.getString("startdate", "2022-01-01");
         dateto = sharedPref.getString("enddate", "2022-02-01");
-        textViewInfo.setText(String.format("%s | %s — %s", currency, datefrom, dateto));
+        textViewInfo.setText(String.format("%s\n%s — %s", currency, datefrom, dateto));
 
         // Hämta växelkurser från API
         currencyValues = getCurrencyValues(currency, datefrom, dateto);

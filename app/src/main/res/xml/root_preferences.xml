@@ -38,7 +38,7 @@
             android:singleLine="true"
             android:visibility="visible"
             app:defaultValue="3"
-            app:title="Linje 1"
+            app:title="Fönstret för linje 1"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:singleLine="true"
             android:visibility="visible"
             app:defaultValue="7"
-            app:title="Linje 2"
+            app:title="Fönstret för linje 2"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
