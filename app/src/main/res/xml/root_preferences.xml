@@ -1,0 +1,54 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Valuta och period">
+
+
+        <EditTextPreference
+            android:defaultValue="2022-01-01"
+            android:key="startdate"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Startdatum"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="2022-02-01"
+            android:key="enddate"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Slutdatum"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:defaultValue="USD"
+            app:entries="@array/currencies"
+            app:entryValues="@array/currencies"
+            app:key="currency"
+            app:title="Valuta"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Glidande medelvärde">
+        <EditTextPreference
+            android:layout_height="wrap_content"
+            android:key="sma1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:visibility="visible"
+            app:defaultValue="3"
+            app:title="Fönstret för linje 1"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            android:layout_height="wrap_content"
+            android:key="sma2"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:visibility="visible"
+            app:defaultValue="7"
+            app:title="Fönstret för linje 2"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
